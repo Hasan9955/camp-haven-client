@@ -9,11 +9,11 @@ import 'swiper/css/pagination';
 import image1 from '../assets/camp5.jpg';
 import image2 from '../assets/camp7.jpg';
 import image3 from '../assets/camp9.jpg';
-
+import image4 from '../assets/camp2.png'
 
 // import required modules
 import { Autoplay, Keyboard, EffectFade, Navigation, Pagination } from 'swiper/modules';
-
+const images = [image1, image2, image3, image4]
 
 
 
@@ -45,15 +45,11 @@ const HomeSlider = () => {
             >
                 {
                     <div>
-                    <SwiperSlide>
-                        <div><img className="h-[200px] md:h-[300px] lg:h-[400px] xl:h-[450px] w-full" src={image1} alt="" /></div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div><img className="h-[200px] md:h-[300px] lg:h-[400px] xl:h-[450px] w-full" src={image2} alt="" /></div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div><img className="h-[200px] md:h-[300px] lg:h-[400px] xl:h-[450px] w-full" src={image3} alt="" /></div>
-                    </SwiperSlide>
+                        {
+                            images.map(img => <SwiperSlide key={img}>
+                                <div><img className="h-[200px] md:h-[300px] lg:h-[400px] xl:h-[450px] w-full" src={img} alt="" /></div>
+                            </SwiperSlide>)
+                        }
                     </div>
                 }
             </Swiper>
