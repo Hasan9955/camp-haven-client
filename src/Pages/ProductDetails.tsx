@@ -3,6 +3,9 @@ import Swal from "sweetalert2";
 import { TProduct } from "../interface/product.interface";
 import ReactImageMagnify from "react-image-magnify";
 import { useState } from "react";
+import { useAppSelector } from "../redux/hooks";
+import { selectCurrentUser } from "../redux/features/auth/authSlice";
+import { useAddCartProductMutation } from "../redux/features/cart/cartApi";
 
 
 type Response = {
@@ -15,8 +18,10 @@ type Response = {
 
 const ProductDetails = () => {
 
-    const [count, setCount] = useState(1);
+    const [countQuantity, setCountQuantity] = useState(1);
     const navigate = useNavigate()
+    const user = useAppSelector(selectCurrentUser)
+    const [addCartProduct] = useAddCartProductMutation();
     const res = useLoaderData() as Response;
     const { data, isError, isLoading } = res;
     if (isLoading) {
@@ -27,11 +32,10 @@ const ProductDetails = () => {
         console.log(isError);
         return <p>An error is going on!!!</p>
     }
-    const { name, description, photo, price, quantity, brand } = data.data;
+    const { _id, name, description, photo, price, quantity, brand } = data.data;
 
 
     const handlePurchase = () => {
-
         if (quantity === 0) {
             return Swal.fire({
                 icon: "error",
@@ -43,10 +47,33 @@ const ProductDetails = () => {
         navigate(`/`)
     }
 
+    const handleAddCart = async (id: string) => {
+        const productData = {
+            productId: id,
+            userId: user?.userId,
+            quantity: countQuantity
+        }
 
-  const increaseCount = () => setCount(count + 1);
+        const res = await addCartProduct(productData) 
+        if(res.data.success){
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Product added successfully",
+                showConfirmButton: false,
+                timer: 1500
+              });
+        }
+
+
+    }
+
+
+  const increaseCount = () => setCountQuantity(countQuantity + 1);
   const decreaseCount = () => {
-    if (count > 1) setCount(count - 1);
+    if (countQuantity > 1) {
+        return setCountQuantity(countQuantity - 1)
+    };
   };
 
     return (
@@ -85,13 +112,13 @@ const ProductDetails = () => {
                             </button>
                             <input
                                 type="text"
-                                value={count} 
+                                value={countQuantity} 
                                 onChange={(e) => {
                                     const value = parseInt(e.target.value, 10);
                                     if (!isNaN(value) && value >= 1) {
-                                      setCount(value);
+                                      setCountQuantity(value);
                                     } else if (e.target.value === '') {
-                                      setCount(0);
+                                      setCountQuantity(0);
                                     }
                                   }}
                                 className="w-12 text-center py-2 bg-gray-100 border border-gray-300"/>
@@ -104,7 +131,7 @@ const ProductDetails = () => {
                         </div>
                         </div>
                     <div className="flex gap-5 mt-5">
-                    <button onClick={handlePurchase} className="btn bg-blue-500 text-white rounded-none">Add To Cart</button>
+                    <button onClick={() => handleAddCart(_id)} className="btn bg-blue-500 text-white rounded-none">Add To Cart</button>
                     <button onClick={handlePurchase} className="btn bg-blue-500 text-white rounded-none">Order Now</button>
                     </div>
                 </div>

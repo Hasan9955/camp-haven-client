@@ -33,6 +33,7 @@ const Login = () => {
             console.log(res);
 
             const user = {
+                userId: res.data._id,
                 email: res.data.email,
                 name: res.data.name,
                 photo: res.data.photo,

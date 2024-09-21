@@ -5,10 +5,12 @@ import Login from "../Pages/Login";
 import SignUp from "../Pages/signUp";
 import AddProduct from "../Pages/AddProduct";
 import Error from "../Pages/Error";
-import Shop from "../Pages/Shop";
-import ProductDetails from "../Pages/productDetails";
+import Shop from "../Pages/Shop"; 
 import { productApi } from "../redux/features/product/productApi";
 import { store } from "../redux/store"; 
+import ProductDetails from "../Pages/ProductDetails";
+import Cart from "../Pages/Cart";
+import ProductManagement from "../Pages/ProductManagement";
 
 
 const router = createBrowserRouter([
@@ -22,20 +24,28 @@ const router = createBrowserRouter([
                 element: <Home />
             },
             {
-                path: '/login',
+                path: 'login',
                 element: <Login />
             },
             {
-                path: '/signUp',
+                path: 'signUp',
                 element: <SignUp />
             },
             {
-                path: '/addProduct',
+                path: 'addProduct',
                 element: <AddProduct />
             },
             {
-                path: '/shop',
+                path: 'shop',
                 element: <Shop />
+            },
+            {
+                path: 'cart',
+                element: <Cart />
+            },
+            {
+                path: 'productManagement',
+                element: <ProductManagement />
             },
             {
                 path: '/productDetails/:id',
