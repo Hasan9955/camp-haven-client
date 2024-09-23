@@ -3,10 +3,11 @@ import { selectCurrentUser, TUser } from "../redux/features/auth/authSlice";
 
 import { useAppSelector } from "../redux/hooks";
 import { useDeleteCartProductMutation, useGetCartProductQuery, useUpdateCartProductMutation } from "../redux/features/cart/cartApi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AiFillDelete } from "react-icons/ai";
 import { TProduct } from "../interface/product.interface";
 import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 interface ProductInterface {
     productId: TProduct;
@@ -17,10 +18,9 @@ interface ProductInterface {
 const Cart = () => {
 
     const [products, setProducts] = useState<ProductInterface[]>([]);
+    const navigate = useNavigate();
     const user = useAppSelector(selectCurrentUser)
-    const { data, isLoading, isError, refetch } = useGetCartProductQuery(user?.userId, {
-        refetchOnMountOrArgChange: true
-    });
+    const { data, isLoading, isError, refetch } = useGetCartProductQuery(user?.userId);
     const [deleteCartProduct] = useDeleteCartProductMutation();
     const [updateCartProduct] = useUpdateCartProductMutation();
 
@@ -38,37 +38,58 @@ const Cart = () => {
     useEffect(() => {
         if (data) {
             setProducts(data.data);
-        }
+        } 
     }, [data]);
 
     if (isLoading) {
         return <p>Loading...</p>
     }
 
-    if (isError) {
-        console.log(isError);
+    if (isError) { 
         return <p>An error is going on!!!</p>
     }
 
     // console.log(products);
 
-    const handleDelete = async (id: string) => {
-        const res = await deleteCartProduct(id)
-        console.log(res);
-        if (res.data.data.deletedCount > 0) {
-            Swal.fire({
-                position: "center",
-                icon: "success",
-                title: "Item removed successfully!",
-                showConfirmButton: false,
-                timer: 1500
-            });
-            refetch();
-        }
+    const handleDelete = (id: string) => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+          }).then(async (result) => {
+            if (result.isConfirmed) {
+                const res = await deleteCartProduct(id)
+        
+                if (res.data.data.deletedCount > 0) {
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Item removed successfully!",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    refetch();
+                }
+            }
+          });
+        
     }
 
-    const handlePurchase = () => {
-
+    const handlePurchase = (id: string, quantity: number) => {
+        if (quantity < 1) {
+            return toast.error('This item is not available')
+        } else {
+            navigate('/buyProduct', {
+                state: {
+                    productId: id,
+                    quantity: quantity
+                }
+            })
+        }
     }
 
     return (
@@ -76,7 +97,7 @@ const Cart = () => {
             {
                 products.length > 0 ? <div>
                     {
-                        products.map(product => <div key={product.productId._id} className="flex flex-col md:flex-row justify-between md:items-center rounded-xl max-w-4xl border shadow-xl mt-10 px-5 mx-auto">
+                        products.map(product => <div key={product._id} className="flex flex-col md:flex-row justify-between md:items-center rounded-xl max-w-4xl border shadow-xl mt-10 px-5 mx-auto">
                             <div className="flex md:items-center flex-col md:flex-row md:space-x-3 max-w-[450px]">
                                 <div className=" ">
                                     <Link to={`/productDetails/${product.productId._id}`}><img className="rounded-lg w-full md:w-56 mb-5 md:mb-0" src={product.productId.photo} alt="" /></Link>
@@ -122,10 +143,9 @@ const Cart = () => {
                                 <p className="text-lg font-bold text-blue-800">Price: $ {product.productId.price}</p>
                                 Subtotal: ${(parseInt(product.productId.price)) * product.quantity}
                                 <div className="flex items-center mt-2 gap-2">
-                                    <button onClick={handlePurchase} className="btn bg-blue-500 text-white rounded-none">Buy Now</button>
+                                    <button onClick={() => handlePurchase(product.productId._id, product.quantity)} className="btn bg-blue-500 text-white rounded-none">Buy Now</button>
                                     <button onClick={() => handleDelete(product._id)} className="btn bg-red-500 text-white  text-xl"><AiFillDelete /></button>
-                                </div>
-                                {/* <button onClick={() => handleDelete(product._id)} className="border-2 rounded-full px-1 py-1 mt-4 w-24 flex justify-center items-center border-blue-500 hover:bg-black hover:text-white hover:border-black click"><AiFillDelete className="text-xl mr-1"></AiFillDelete><p>Delete</p></button> */}
+                                </div> 
                             </div>
 
                         </div>)
@@ -133,12 +153,9 @@ const Cart = () => {
                 </div> :
                     <div className="flex flex-col text-center justify-center  items-center mb-20 p-2">
                         <img className=" md:w-1/2" src="https://i.ibb.co/j6MBkVs/image.webp" alt="" />
-                        <h2 className="text-2xl md:text-3xl lg:text-4xl text-amber-800">Your cart is currently empty.</h2>
-                        <p className="max-w-xl text-sm font-bold"> Feel free to browse our products and add items to your cart whenever you are ready to make a purchase.
-                        </p>
-                        <span className="md:text-3xl text-2xl lg:text-4xl text-blue-500 mb-5">Happy shopping!</span>
-                        <Link to='/'>
-                            <button className="btn rounded-full bg-blue-500 text-white">Go Home</button>
+                        <h2 className="text-2xl md:text-2xl mb-4 ">Your cart is currently empty.</h2>
+                        <Link to='/shop'>
+                            <button className="btn bg-blue-500 text-white">Start Shopping</button>
                         </Link>
                     </div>
             }

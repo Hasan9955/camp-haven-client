@@ -15,8 +15,7 @@ const Shop = () => {
     if (isError) {
         console.log(isError);
         return <p>An error is going on!!!</p>
-    }
-    console.log(data);
+    } 
 
     return (
         <div className="text-xl">

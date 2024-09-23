@@ -13,7 +13,6 @@ const Navbar = () => {
         <li><NavLink to='/cart'>Cart</NavLink></li>
         <li><a href="#about">About</a></li>
     </>
-
     const user = useAppSelector(selectCurrentUser);
     const dispatch = useAppDispatch();
     const handleLogOut = () => {

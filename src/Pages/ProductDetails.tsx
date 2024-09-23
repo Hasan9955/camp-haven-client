@@ -6,9 +6,10 @@ import { useState } from "react";
 import { useAppSelector } from "../redux/hooks";
 import { selectCurrentUser } from "../redux/features/auth/authSlice";
 import { useAddCartProductMutation } from "../redux/features/cart/cartApi";
+import { toast } from "react-toastify";
 
 
-type Response = {
+export type Response = {
     data: {
         data: TProduct;
     };
@@ -32,20 +33,8 @@ const ProductDetails = () => {
         console.log(isError);
         return <p>An error is going on!!!</p>
     }
-    const { _id, name, description, photo, price, quantity, brand } = data.data;
+    const { _id, name, description, photo, price, quantity, brand, sold } = data.data;
 
-
-    const handlePurchase = () => {
-        if (quantity === 0) {
-            return Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: "Sorry, but this item is not available right now.",
-            });
-        }
-
-        navigate(`/`)
-    }
 
     const handleAddCart = async (id: string) => {
         const productData = {
@@ -53,28 +42,46 @@ const ProductDetails = () => {
             userId: user?.userId,
             quantity: countQuantity
         }
-
-        const res = await addCartProduct(productData) 
-        if(res.data.success){
-            Swal.fire({
-                position: "center",
-                icon: "success",
-                title: "Product added successfully",
-                showConfirmButton: false,
-                timer: 1500
-              });
+        if (quantity < 1) {
+            return toast.error('This item is not available')
+        } else {
+            const res = await addCartProduct(productData)
+            if (res.data.success) {
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Product added successfully",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
         }
-
-
     }
 
 
-  const increaseCount = () => setCountQuantity(countQuantity + 1);
-  const decreaseCount = () => {
-    if (countQuantity > 1) {
-        return setCountQuantity(countQuantity - 1)
+    const increaseCount = () => {
+        if(countQuantity < quantity){
+ setCountQuantity(countQuantity + 1)
+        }
     };
-  };
+    const decreaseCount = () => {
+        if (countQuantity > 1) {
+            return setCountQuantity(countQuantity - 1)
+        };
+    };
+
+    const handlePurchase = (id: string, quantity: number) => {
+        if (quantity < 1) {
+            return toast.error('This item is not available')
+        } else {
+            navigate('/buyProduct', {
+                state: {
+                    productId: id,
+                    quantity: quantity
+                }
+            })
+        }
+    }
 
     return (
         <div>
@@ -100,39 +107,41 @@ const ProductDetails = () => {
                         <h4 className="max-w-md ">{description}</h4>
                         <h4 className="font-bold ">Brand: {brand}</h4>
                         <h4 className="font-bold ">Availability: {quantity > 0 ? <span className="bg-green-600 p-1 font-semibold text-xs text-white max-w-28">Many In Stock</span> : <p className="bg-red-600 p-1 font-semibold text-xs text-white max-w-28"> Out Of Stock </p>}</h4>
-                        <h4 className="font-bold ">Stock: {quantity} items</h4>
+                        <h4 className="font-bold ">Total Sold: {sold} items</h4>
                         <h4 className="font-bold text-xl text-blue-600">Price: ${price}</h4>
                         <div className="flex justify-normal items-center max-w-40 gap-5">
                             <p className="font-bold ">Quantity:</p>
-                        <div className="flex items-center space-x-2"> 
-                            <button
-                                onClick={decreaseCount}
-                                className="px-4 py-2 bg-gray-200 text-gray-600 hover:bg-gray-300 rounded-l">
-                                -
-                            </button>
-                            <input
-                                type="text"
-                                value={countQuantity} 
-                                onChange={(e) => {
-                                    const value = parseInt(e.target.value, 10);
-                                    if (!isNaN(value) && value >= 1) {
-                                      setCountQuantity(value);
-                                    } else if (e.target.value === '') {
-                                      setCountQuantity(0);
-                                    }
-                                  }}
-                                className="w-12 text-center py-2 bg-gray-100 border border-gray-300"/>
-                            <button
-                                onClick={increaseCount}
-                                className="px-4 py-2 bg-gray-200 text-gray-600 hover:bg-gray-300 rounded-r">
-                                +
-                            </button>
+                            <div className="flex items-center space-x-2">
+                                <button
+                                disabled={countQuantity <= 1}
+                                    onClick={decreaseCount}
+                                    className="px-4 py-2 bg-gray-200 text-gray-600 hover:bg-gray-300 rounded-l btn btn-sm rounded-none">
+                                    -
+                                </button>
+                                <input
+                                    type="text"
+                                    value={countQuantity}
+                                    onChange={(e) => {
+                                        const value = parseInt(e.target.value, 10);
+                                        if (!isNaN(value) && value >= 1) {
+                                            setCountQuantity(value);
+                                        } else if (e.target.value === '') {
+                                            setCountQuantity(0);
+                                        }
+                                    }}
+                                    className="input-sm w-12 text-center py-2 bg-gray-100 border border-gray-300"/>
+                                <button
+                                disabled={countQuantity >= quantity}
+                                    onClick={increaseCount}
+                                    className="px-4 py-2 bg-gray-200 text-gray-600 hover:bg-gray-300 rounded-r btn btn-sm rounded-none">
+                                    +
+                                </button>
+                            </div>
                         </div>
-                        </div>
-                        </div>
+                    </div>
                     <div className="flex gap-5 mt-5">
-                    <button onClick={() => handleAddCart(_id)} className="btn bg-blue-500 text-white rounded-none">Add To Cart</button>
-                    <button onClick={handlePurchase} className="btn bg-blue-500 text-white rounded-none">Order Now</button>
+                        <button onClick={() => handleAddCart(_id)} className="btn bg-blue-500 text-white rounded-none">Add To Cart</button>
+                        <button onClick={() => handlePurchase(_id, countQuantity)} className="btn bg-blue-500 text-white rounded-none">Buy Now</button>
                     </div>
                 </div>
             </div>

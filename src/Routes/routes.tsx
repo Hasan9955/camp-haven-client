@@ -11,6 +11,8 @@ import { store } from "../redux/store";
 import ProductDetails from "../Pages/ProductDetails";
 import Cart from "../Pages/Cart";
 import ProductManagement from "../Pages/ProductManagement";
+import UpdateProduct from "../Pages/UpdateProduct";
+import BuyProduct from "../Pages/BuyProduct";
 
 
 const router = createBrowserRouter([
@@ -46,6 +48,10 @@ const router = createBrowserRouter([
             {
                 path: 'productManagement',
                 element: <ProductManagement />
+            }, 
+            {
+                path: 'buyProduct',
+                element: <BuyProduct />
             },
             {
                 path: '/productDetails/:id',
@@ -55,7 +61,15 @@ const router = createBrowserRouter([
                     console.log(result); 
                     return result 
                 }
-            }
+            },
+            {
+                path: '/updateProduct/:id',
+                element: <UpdateProduct />,
+                loader: async ({ params }) => {
+                    const result = await store.dispatch(productApi.endpoints.getSingleProduct.initiate(params.id)) 
+                    return result 
+                }
+            },
         ]
     }
 
