@@ -67,6 +67,7 @@ const ProductManagement = () => {
                                 <div className=" ">
                                     <div className="text-xl font-bold max-w-[250px]">{product.name}</div>
                                     <p>Brand: {product.brand}</p>
+                                    <p>Category: {product.category}</p>
 
                                     {/* Quantity */}
                                     <p className="font-bold ">Stock: {product.quantity} items</p>

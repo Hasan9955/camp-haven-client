@@ -38,14 +38,14 @@ const Cart = () => {
     useEffect(() => {
         if (data) {
             setProducts(data.data);
-        } 
+        }
     }, [data]);
 
     if (isLoading) {
         return <p>Loading...</p>
     }
 
-    if (isError) { 
+    if (isError) {
         return <p>An error is going on!!!</p>
     }
 
@@ -60,10 +60,10 @@ const Cart = () => {
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes, delete it!"
-          }).then(async (result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
                 const res = await deleteCartProduct(id)
-        
+
                 if (res.data.data.deletedCount > 0) {
                     Swal.fire({
                         position: "center",
@@ -75,18 +75,20 @@ const Cart = () => {
                     refetch();
                 }
             }
-          });
-        
+        });
+
     }
 
-    const handlePurchase = (id: string, quantity: number) => {
-        if (quantity < 1) {
+    const handlePurchase = (cartId: string, productId: string, quantity: number, stock: number) => {
+        if (stock < 1) {
             return toast.error('This item is not available')
         } else {
             navigate('/buyProduct', {
                 state: {
-                    productId: id,
-                    quantity: quantity
+                    cartId,
+                    productId,
+                    quantity
+
                 }
             })
         }
@@ -141,11 +143,11 @@ const Cart = () => {
                             </div>
                             <div className="flex flex-col">
                                 <p className="text-lg font-bold text-blue-800">Price: $ {product.productId.price}</p>
-                                Subtotal: ${(parseInt(product.productId.price)) * product.quantity}
+                                Subtotal: ${product.productId.price * product.quantity}
                                 <div className="flex items-center mt-2 gap-2">
-                                    <button onClick={() => handlePurchase(product.productId._id, product.quantity)} className="btn bg-blue-500 text-white rounded-none">Buy Now</button>
+                                    <button onClick={() => handlePurchase(product._id, product.productId._id, product.quantity, product.productId.quantity)} className="btn bg-blue-500 text-white rounded-none">Buy Now</button>
                                     <button onClick={() => handleDelete(product._id)} className="btn bg-red-500 text-white  text-xl"><AiFillDelete /></button>
-                                </div> 
+                                </div>
                             </div>
 
                         </div>)

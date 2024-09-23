@@ -33,7 +33,7 @@ const ProductDetails = () => {
         console.log(isError);
         return <p>An error is going on!!!</p>
     }
-    const { _id, name, description, photo, price, quantity, brand, sold } = data.data;
+    const { _id, name, description, photo, price, quantity: stock, brand, sold } = data.data;
 
 
     const handleAddCart = async (id: string) => {
@@ -42,7 +42,7 @@ const ProductDetails = () => {
             userId: user?.userId,
             quantity: countQuantity
         }
-        if (quantity < 1) {
+        if (stock < 1) {
             return toast.error('This item is not available')
         } else {
             const res = await addCartProduct(productData)
@@ -60,7 +60,7 @@ const ProductDetails = () => {
 
 
     const increaseCount = () => {
-        if(countQuantity < quantity){
+        if(countQuantity < stock){
  setCountQuantity(countQuantity + 1)
         }
     };
@@ -71,7 +71,7 @@ const ProductDetails = () => {
     };
 
     const handlePurchase = (id: string, quantity: number) => {
-        if (quantity < 1) {
+        if (stock < 1) {
             return toast.error('This item is not available')
         } else {
             navigate('/buyProduct', {
@@ -106,7 +106,7 @@ const ProductDetails = () => {
                         <h2 className="card-title mb-2">{name}</h2>
                         <h4 className="max-w-md ">{description}</h4>
                         <h4 className="font-bold ">Brand: {brand}</h4>
-                        <h4 className="font-bold ">Availability: {quantity > 0 ? <span className="bg-green-600 p-1 font-semibold text-xs text-white max-w-28">Many In Stock</span> : <p className="bg-red-600 p-1 font-semibold text-xs text-white max-w-28"> Out Of Stock </p>}</h4>
+                        <h4 className="font-bold ">Availability: {stock > 0 ? <span className="bg-green-600 p-1 font-semibold text-xs text-white max-w-28">Many In Stock</span> : <span className="bg-red-600 p-1 font-semibold text-xs text-white max-w-28"> Out Of Stock </span>}</h4>
                         <h4 className="font-bold ">Total Sold: {sold} items</h4>
                         <h4 className="font-bold text-xl text-blue-600">Price: ${price}</h4>
                         <div className="flex justify-normal items-center max-w-40 gap-5">
@@ -131,7 +131,7 @@ const ProductDetails = () => {
                                     }}
                                     className="input-sm w-12 text-center py-2 bg-gray-100 border border-gray-300"/>
                                 <button
-                                disabled={countQuantity >= quantity}
+                                disabled={countQuantity >= stock}
                                     onClick={increaseCount}
                                     className="px-4 py-2 bg-gray-200 text-gray-600 hover:bg-gray-300 rounded-r btn btn-sm rounded-none">
                                     +

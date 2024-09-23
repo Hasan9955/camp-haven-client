@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { FormEvent, useState } from 'react'
 import { toast } from 'react-toastify';
 import { useLoginMutation } from '../redux/features/auth/authApi';
 import { useAppDispatch } from '../redux/hooks';
@@ -13,13 +13,12 @@ const Login = () => {
     const location = useLocation()
     const [login] = useLoginMutation();
     const dispatch = useAppDispatch();
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handleLogin = async (e: any) => {
+    
+    const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        const form = e.target
-        const email = form.email.value
-        const password = form.password.value
+        const form = e.currentTarget
+        const email = (form.elements.namedItem('email') as HTMLInputElement).value
+        const password = (form.elements.namedItem('password') as HTMLInputElement).value
         setError('')
         const userInfo = {
             email,

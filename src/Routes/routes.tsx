@@ -13,6 +13,7 @@ import Cart from "../Pages/Cart";
 import ProductManagement from "../Pages/ProductManagement";
 import UpdateProduct from "../Pages/UpdateProduct";
 import BuyProduct from "../Pages/BuyProduct";
+import SuccessPage from "../Pages/SuccessPage";
 
 
 const router = createBrowserRouter([
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
             {
                 path: 'buyProduct',
                 element: <BuyProduct />
+            },
+            {
+                path: 'successPage',
+                element: <SuccessPage />
             },
             {
                 path: '/productDetails/:id',
