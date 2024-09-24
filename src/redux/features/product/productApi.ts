@@ -12,15 +12,11 @@ export const productApi = baseApi.injectEndpoints({
             })
         }),
         getProducts: builder.query({
-            query: (productQuery) => {
-                const params = new URLSearchParams()
-                if(productQuery){
-                    params.append('query', productQuery)
-                }
+            query: (query) => {
                 return {
-                    url: '/products/',
+                    url: '/products',
                     method: "GET",
-                    params: params
+                    params: query
                 }
             }
         }),
