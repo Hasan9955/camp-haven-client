@@ -57,12 +57,12 @@ const ProductManagement = () => {
                 </Link>
             </div>
             {
-                data.data.length > 0 && <div>
+                data.data.length > 0 && <div className="px-4">
                     {
-                        data.data.map((product: TProduct) => <div key={product._id} className="flex flex-col md:flex-row justify-between md:items-center rounded-xl max-w-4xl border shadow-xl mt-10 px-5 mx-auto">
+                        data.data.map((product: TProduct) => <div key={product._id} className="flex flex-col md:flex-row justify-between md:items-center rounded-xl max-w-4xl border shadow-xl mt-10 p-10 md:px-5 md:py-0 mx-auto">
                             <div className="flex md:items-center flex-col md:flex-row md:space-x-3 max-w-[450px]">
                                 <div className=" ">
-                                    <img className="rounded-lg w-full md:w-56 mb-5 md:mb-0" src={product.photo} alt="" />
+                                    <img className="rounded-lg w-full md:w-56 mb-5 md:mb-0 " src={product.photo} alt="" />
                                 </div>
                                 <div className=" ">
                                     <div className="text-xl font-bold max-w-[250px]">{product.name}</div>

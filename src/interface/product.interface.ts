@@ -10,6 +10,7 @@ export interface TProduct {
     sold: number;
     status: 'available' | 'unavailable';
     isDeleted: boolean;
+    isRecommended: boolean;
     brand: string;
     _id: string;
 }

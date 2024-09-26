@@ -14,6 +14,7 @@ import ProductManagement from "../Pages/ProductManagement";
 import UpdateProduct from "../Pages/UpdateProduct";
 import BuyProduct from "../Pages/BuyProduct";
 import SuccessPage from "../Pages/SuccessPage";
+import AboutUs from "../Pages/AboutUs";
 
 
 const router = createBrowserRouter([
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
             {
                 path: 'successPage',
                 element: <SuccessPage />
+            },
+            {
+                path: 'about',
+                element: <AboutUs />
             },
             {
                 path: '/productDetails/:id',

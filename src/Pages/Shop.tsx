@@ -1,8 +1,9 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { useGetProductsQuery } from "../redux/features/product/productApi";
 import ProductCard from "../Components/ProductCard";
 import { TProduct } from "../interface/product.interface";
 import img from '../assets/no-magento-product-found.jpg';
+import { useLocation } from "react-router-dom";
 
 type TQuery = {
     filter?: string;
@@ -13,27 +14,39 @@ type TQuery = {
 };
 
 const Shop = () => {
+    
+    const location = useLocation();
+    
     const [query, setQuery] = useState<TQuery>({
-        category: '',
+        category: location.state || '',
         minPrice: '',
         maxPrice: '',
         sort: '',
         filter: ''
     });
 
+    // References to the forms for resetting input fields
+    const searchFormRef = useRef<HTMLFormElement>(null);
+    const filterFormRef = useRef<HTMLFormElement>(null);
+
     // Fetch products based on the query
     const { data, isError, isLoading } = useGetProductsQuery(query, {
         refetchOnMountOrArgChange: true,
     });
+    console.log(data);
 
     // Store fetched products
     const [products, setProducts] = useState<TProduct[]>([]);
+
+    window.onbeforeunload = function () {
+        return "Data will be lost if you leave the page, are you sure?";
+    };
 
     // Update products when data changes
     useEffect(() => {
         if (data?.data) {
             setProducts(data.data);
-        }
+        } 
     }, [data]);
 
     // Handle search/filter form submission
@@ -72,8 +85,9 @@ const Shop = () => {
         }));
     };
 
-    // Clear all filters
+    // Clear all filters and reset form inputs
     const clearFilters = () => {
+        // Reset the query to default values
         setQuery({
             category: '',
             minPrice: '',
@@ -81,6 +95,16 @@ const Shop = () => {
             sort: '',
             filter: ''
         });
+
+        // Clear search form inputs
+        if (searchFormRef.current) {
+            searchFormRef.current.reset();
+        }
+
+        // Clear filter form inputs
+        if (filterFormRef.current) {
+            filterFormRef.current.reset();
+        }
     };
 
     if (isLoading) {
@@ -95,15 +119,15 @@ const Shop = () => {
     return (
         <div className="">
             {/* Search Bar */}
-            <div className="text-center">
-                <form onSubmit={handleSearch} className="max-w-lg mx-auto relative">
+            <div className="flex justify-center items-center text-center">
+                <form onSubmit={handleSearch} ref={searchFormRef} className="max-w-lg mx-auto relative">
                     <input
                         type="text"
                         placeholder="Search by product name"
                         name="search"
-                        className="input input-bordered border-blue-500 w-64 md:w-80 lg:w-96 mt-5"
+                        className="input input-bordered border-r-0 border-blue-500 input-sm md:input-md w-64 md:w-80 lg:w-96 mt-5"
                     />
-                    <button type="submit" className="text-blue-500 btn btn-md absolute right-0 bottom-0">
+                    <button type="submit" className="border border-l-0 rounded-l-none border-blue-500 text-blue-500 btn btn-sm md:btn-md absolute right-0 bottom-0">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
@@ -112,11 +136,11 @@ const Shop = () => {
             </div>
 
             {/* Filter Section */}
-            <div className="flex flex-col md:flex-row justify-between items-center bg-base-100 shadow-xl p-5">
-                <p className="text-xl md:text-3xl"> Total products: {products?.length} </p>
+            <div className="flex flex-row justify-between items-center bg-base-100 shadow-xl p-5">
+                <p className="text-lg md:text-3xl">Total products: {products?.length} </p>
                 <div className="dropdown dropdown-end">
-                    <button className="btn bg-blue-500 text-white">Filter</button>
-                    <form onSubmit={handleFilter} className="menu dropdown-content bg-base-100 rounded-box z-[1] p-3 shadow">
+                    <button className="btn btn-sm md:btn-md bg-blue-500 text-white">Filter</button>
+                    <form onSubmit={handleFilter} ref={filterFormRef} className="menu dropdown-content bg-base-100 rounded-box z-[10] p-3 shadow  ">
                         {/* Category Filter */}
                         <div className="form-control">
                             <label className="label">

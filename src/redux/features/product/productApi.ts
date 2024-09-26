@@ -20,6 +20,22 @@ export const productApi = baseApi.injectEndpoints({
                 }
             }
         }),
+        getTopSoldProducts: builder.query({
+            query: () => {
+                return {
+                    url: '/products/topSoldProducts',
+                    method: "GET"
+                }
+            }
+        }),
+        getRecommendedProducts: builder.query({
+            query: () => {
+                return {
+                    url: '/products/recommendedProducts',
+                    method: "GET"
+                }
+            }
+        }),
         getSingleProduct: builder.query({
             query: (id) => {  
                 return {
@@ -49,4 +65,4 @@ export const productApi = baseApi.injectEndpoints({
 })
 
 
-export const { useAddProductMutation, useGetProductsQuery, useGetSingleProductQuery, useDeleteProductMutation, useUpdateProductMutation } = productApi;
+export const { useAddProductMutation, useGetTopSoldProductsQuery, useGetProductsQuery, useGetSingleProductQuery, useDeleteProductMutation, useUpdateProductMutation, useGetRecommendedProductsQuery } = productApi;

@@ -18,11 +18,11 @@ const AddProduct = () => {
         const description = form.description.value
         const photo = form.photo.value 
         const brand = form.brand.value 
+        const category = form.category.value 
 
 
 
-        const productInfo = { name, price, quantity, description, photo, brand }
-        console.log(productInfo)
+        const productInfo = { name, category, price, quantity, description, photo, brand } 
         
 
         try {
@@ -66,7 +66,7 @@ const AddProduct = () => {
                         </div>
                         <div data-aos="fade-right" className="form-control">
                             <label className="label">
-                                <span className="label-text text-black">Quantity</span>
+                                <span className="label-text text-black">Stock</span>
                             </label>
                             <input type="number" name="quantity" placeholder="Enter product quantity" className="input input-bordered" required />
                         </div>
@@ -81,6 +81,12 @@ const AddProduct = () => {
                             <span className="label-text text-black">Brand</span>
                         </label>
                         <input type="text" name="brand" placeholder="Enter product brand" className="input input-bordered" required />
+                    </div>
+                        <div data-aos="fade-right" className="form-control">
+                        <label className="label">
+                            <span className="label-text text-black">Category</span>
+                        </label>
+                        <input type="text" name="category" placeholder="Enter product category" className="input input-bordered" required />
                     </div>
                         
                     </div>

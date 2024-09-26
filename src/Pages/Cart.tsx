@@ -25,6 +25,10 @@ const Cart = () => {
     const [updateCartProduct] = useUpdateCartProductMutation();
 
 
+    window.onbeforeunload = function () {
+        return "Data will be lost if you leave the page, are you sure?";
+    };
+    
     const handleQuantity = async (id: string, quantity: number) => {
         const data = {
             id,
@@ -95,14 +99,14 @@ const Cart = () => {
     }
 
     return (
-        <div>
+        <div className="px-4">
             {
                 products.length > 0 ? <div>
                     {
-                        products.map(product => <div key={product._id} className="flex flex-col md:flex-row justify-between md:items-center rounded-xl max-w-4xl border shadow-xl mt-10 px-5 mx-auto">
+                        products.map(product => <div key={product._id} className="flex flex-col md:flex-row justify-between md:items-center rounded-xl max-w-4xl border shadow-xl mt-10 p-10 md:p-5 md:py-0 mx-auto">
                             <div className="flex md:items-center flex-col md:flex-row md:space-x-3 max-w-[450px]">
                                 <div className=" ">
-                                    <Link to={`/productDetails/${product.productId._id}`}><img className="rounded-lg w-full md:w-56 mb-5 md:mb-0" src={product.productId.photo} alt="" /></Link>
+                                    <Link to={`/productDetails/${product.productId._id}`}><img className="object-cover rounded-lg max-w-72 mx-auto md:w-56 mb-5 md:mb-0" src={product.productId.photo} alt="" /></Link>
                                 </div>
                                 <div className=" ">
                                     <Link to={`/productDetails/${product.productId._id}`}><div className="text-xl font-bold max-w-[250px]">{product.productId.name}</div></Link>

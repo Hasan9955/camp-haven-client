@@ -11,7 +11,7 @@ const Navbar = () => {
         <li><NavLink to='/'>Home</NavLink></li>
         <li><NavLink to='/shop'>Shop</NavLink></li>
         <li><NavLink to='/cart'>Cart</NavLink></li>
-        <li><a href="#about">About</a></li>
+        <li><NavLink to='/about'>About</NavLink></li>
     </>
     const user = useAppSelector(selectCurrentUser);
     const dispatch = useAppDispatch();
@@ -21,8 +21,8 @@ const Navbar = () => {
     }
 
     return (
-        <div className="navbar bg-base-100">
-            <div className="navbar-start">
+        <div className="navbar justify-between bg-base-100">
+            <div className="md:navbar-start">
                 <div className="dropdown">
                     <label tabIndex={0} className="btn btn-ghost lg:hidden">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" /></svg>
@@ -32,8 +32,8 @@ const Navbar = () => {
                     </ul>
                 </div>
                 <Link className='flex gap-3 justify-center items-center' to='/'>
-                    <img className='w-16 h-14' src={logo} alt="logo" />
-                    <p className='text-4xl font-bold capitalize'>C<span className='text-blue-500'>A</span>MP H<span className='text-blue-500'>A</span>VEN</p>
+                    <img className='md:w-16 w-12 h-10 md:h-14' src={logo} alt="logo" />
+                    <p className=' md:text-3xl xl:text-4xl font-bold uppercase'>C<span className='text-blue-500'>A</span>MP H<span className='text-blue-500'>A</span>VEN</p>
                 </Link>
             </div>
             <div className="navbar-center hidden lg:flex">
@@ -42,12 +42,13 @@ const Navbar = () => {
                 </ul>
             </div>
 
-            <div className="navbar-end">
+            <div className="md:navbar-end">
                 {
                     user ? <div className='flex items-center'>
+                        <p className='font-bold border-2 mr-1 p-2 text-lg hidden md:flex'>{user.name}</p>
                         <div className="dropdown dropdown-hover dropdown-end">
                             <label tabIndex={0} className="md:mx-2 btn btn-sm md:btn-md btn-ghost btn-circle avatar">
-                                <div className="w-10 rounded-full">
+                                <div className="w-10 rounded-full border-2 border-blue-500">
                                     <img src={user.photo} alt='userImg' />
                                 </div>
                             </label>
