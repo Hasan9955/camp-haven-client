@@ -1,13 +1,12 @@
 import { Link, useLoaderData, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { TProduct } from "../interface/product.interface";
-import ReactImageMagnify from "react-image-magnify";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useAppSelector } from "../redux/hooks";
 import { selectCurrentUser } from "../redux/features/auth/authSlice";
 import { useAddCartProductMutation } from "../redux/features/cart/cartApi";
 import { toast } from "react-toastify";
-
+import '../App.css'
 
 export type Response = {
     data: {
@@ -18,6 +17,9 @@ export type Response = {
 }
 
 const ProductDetails = () => {
+
+    const imageZoomRef = useRef<HTMLDivElement>(null);
+
 
     const [countQuantity, setCountQuantity] = useState(1);
     const navigate = useNavigate()
@@ -92,24 +94,48 @@ const ProductDetails = () => {
         }
     }
 
+
+    const handleMouseMove = (event: React.MouseEvent) => {
+        const imageZoom = imageZoomRef.current;
+        if (!imageZoom) return;
+
+        imageZoom.style.setProperty('--display', 'block');
+        const pointer = {
+            x: (event.nativeEvent.offsetX * 100) / imageZoom.offsetWidth,
+            y: (event.nativeEvent.offsetY * 100) / imageZoom.offsetHeight,
+        };
+        imageZoom.style.setProperty('--zoom-x', `${pointer.x}%`);
+        imageZoom.style.setProperty('--zoom-y', `${pointer.y}%`);
+
+        console.log(pointer); // To see if the event fires correctly
+    };
+
+    const handleMouseOut = () => {
+        const imageZoom = imageZoomRef.current;
+        if (imageZoom) {
+            imageZoom.style.setProperty('--display', 'none');
+        }
+    };
+
     return (
         <div>
             <div className="flex flex-col md:flex-row bg-base-100 my-10 md:mx-10">
-                <figure>
-                    <ReactImageMagnify className="w-[400px] lg:w-[600px] h-[230px] md:h-[300px] lg:h-[400px] rounded-xl" {...{
-                        smallImage: {
-                            alt: 'productIMG',
-                            isFluidWidth: true,
-                            src: photo
-                        },
-                        largeImage: {
-                            src: photo,
-                            width: 1200,
-                            height: 1800
-                        }
-                    }} />
-                    {/* <img className="w-[400px] lg:w-[600px] h-[230px] md:h-[300px] lg:h-[400px] rounded-xl" src={photo} alt="productIMG" /> */}
-                </figure>
+                <div
+                    id="imageZoom"
+                    ref={imageZoomRef}
+                    className=""
+                    style={{
+                        '--url': `url(${photo})`,
+                        '--zoom-x': '0%',
+                        '--zoom-y': '0%',
+                        '--display': 'none',
+                    } as React.CSSProperties}
+                    onMouseMove={handleMouseMove}
+                    onMouseOut={handleMouseOut}
+                >
+                    <img src={photo} alt="ProductImg" className=" " />
+                </div>
+                {/* <img className="w-[400px] lg:w-[600px] h-[230px] md:h-[300px] lg:h-[400px] rounded-xl" src={photo} alt="productIMG" /> */}
                 <div className="p-2 lg:card-body flex flex-col">
                     <div className="space-y-3">
                         <h2 className="card-title mb-2">{name}</h2>

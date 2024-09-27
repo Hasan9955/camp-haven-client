@@ -1,12 +1,11 @@
-import './App.css'
 
-function App() { 
 
+const App = () => {
   return (
-    <div className='text-center font-bold text-5xl'> 
-      <h1>Hasan Bin Ali</h1> 
+    <div>
+      
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;

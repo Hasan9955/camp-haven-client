@@ -25,32 +25,28 @@ const Shop = () => {
         filter: ''
     });
 
-    // References to the forms for resetting input fields
     const searchFormRef = useRef<HTMLFormElement>(null);
     const filterFormRef = useRef<HTMLFormElement>(null);
 
-    // Fetch products based on the query
     const { data, isError, isLoading } = useGetProductsQuery(query, {
         refetchOnMountOrArgChange: true,
     }); 
 
-    // Store fetched products
-    const [products, setProducts] = useState<TProduct[]>([]);
+     const [products, setProducts] = useState<TProduct[]>([]);
 
-    // Update products when data changes
-    useEffect(() => {
+     useEffect(() => {
         if (data?.data) {
             setProducts(data.data);
         } 
     }, [data]);
 
-    // Handle search/filter form submission
+    
     const handleSearch = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const form = e.currentTarget;
         const filter = (form.elements.namedItem("search") as HTMLInputElement).value;
 
-        // Update query with search term
+       
         updateQuery({ filter: filter || '' });
     };
 
@@ -72,7 +68,7 @@ const Shop = () => {
         updateQuery(queryData);
     };
 
-    // Update query and trigger refetch
+    
     const updateQuery = (newQuery: Partial<TQuery>) => {
         setQuery((prevQuery) => ({
             ...prevQuery,
@@ -80,9 +76,9 @@ const Shop = () => {
         }));
     };
 
-    // Clear all filters and reset form inputs
+   
     const clearFilters = () => {
-        // Reset the query to default values
+       
         setQuery({
             category: '',
             minPrice: '',
@@ -91,12 +87,12 @@ const Shop = () => {
             filter: ''
         });
 
-        // Clear search form inputs
+        
         if (searchFormRef.current) {
             searchFormRef.current.reset();
         }
 
-        // Clear filter form inputs
+       
         if (filterFormRef.current) {
             filterFormRef.current.reset();
         }
@@ -182,8 +178,7 @@ const Shop = () => {
                     </form>
                 </div>
             </div>
-
-            {/* Product Grid */}
+            
             <div>
                 {products.length ? (
                     <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5 p-5">

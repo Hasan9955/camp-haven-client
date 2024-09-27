@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import logo from '../assets/camp haven 02.png'
  const Footer = () => {
     return (
-        <footer className="footer footer-center py-10 md:px-10 bg-base-200">
+        <footer className="footer footer-center py-5 mt-10 md:px-10 bg-base-200">
             <aside>
                 <div className=' '>
                 <Link className='flex gap-3 justify-center items-center' to='/'>
