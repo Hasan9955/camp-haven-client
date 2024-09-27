@@ -11,8 +11,23 @@ const Layout = () => {
 
     useEffect(() =>{
         window.scrollTo(0, 0)
-    },[location.pathname])
+    },[location.pathname]) 
 
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (location.pathname === '/cart') {
+        event.preventDefault();
+        event.returnValue = ''; 
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    // Cleanup the event listener when the component unmounts or the route changes
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [location]);
 
     return (
         <div>

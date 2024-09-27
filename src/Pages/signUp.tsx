@@ -26,11 +26,7 @@ const SignUp = () => {
         const email = form.email.value
         const password = form.password.value
         setError('')
-        setEmailError('')
-        console.log({
-            name, photo, email, password,
-            address, phone
-        })
+        setEmailError('') 
 
 
         if (!/^(?=.*[A-Z]).{6,}$/.test(password)) {
@@ -42,8 +38,7 @@ const SignUp = () => {
                 name, address, photo, email, phone, password
             }
 
-            const res = await signUp(userData).unwrap();
-            console.log(res);
+            const res = await signUp(userData).unwrap(); 
 
             const user = {
                 userId: res.data._id,
@@ -51,15 +46,13 @@ const SignUp = () => {
                 name: res.data.name,
                 photo: res.data.photo,
                 role: res.data.role,
-            }
-            console.log(user);
+            } 
             dispatch(setUser({
                 user
             }))
             toast.success('Sign up Successful !!!')
             navigate("/")
-        } catch (error: any) {
-            console.log(error);
+        } catch (error: any) { 
             if(error.data.message.includes('E11000 duplicate key error collection')){
                 setEmailError(error)
             }

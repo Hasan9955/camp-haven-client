@@ -15,6 +15,7 @@ import UpdateProduct from "../Pages/UpdateProduct";
 import BuyProduct from "../Pages/BuyProduct";
 import SuccessPage from "../Pages/SuccessPage";
 import AboutUs from "../Pages/AboutUs";
+import PrivateRoute from "./PrivateRoute";
 
 
 const router = createBrowserRouter([
@@ -37,7 +38,7 @@ const router = createBrowserRouter([
             },
             {
                 path: 'addProduct',
-                element: <AddProduct />
+                element: <PrivateRoute><AddProduct /></PrivateRoute>
             },
             {
                 path: 'shop',
@@ -45,19 +46,25 @@ const router = createBrowserRouter([
             },
             {
                 path: 'cart',
-                element: <Cart />
+                element: <PrivateRoute><Cart /></PrivateRoute>
             },
             {
                 path: 'productManagement',
-                element: <ProductManagement />
+                element: <PrivateRoute>
+                    <ProductManagement />
+                    </PrivateRoute>
             }, 
             {
                 path: 'buyProduct',
-                element: <BuyProduct />
+                element: <PrivateRoute>
+                    <BuyProduct />
+                </PrivateRoute>
             },
             {
                 path: 'successPage',
-                element: <SuccessPage />
+                element: <PrivateRoute>
+                    <SuccessPage />
+                </PrivateRoute>
             },
             {
                 path: 'about',
@@ -68,13 +75,15 @@ const router = createBrowserRouter([
                 element: <ProductDetails />,
                 loader: async ({ params }) => {
                     const result = await store.dispatch(productApi.endpoints.getSingleProduct.initiate(params.id))
-                    console.log(result); 
+                   
                     return result 
                 }
             },
             {
                 path: '/updateProduct/:id',
-                element: <UpdateProduct />,
+                element: <PrivateRoute>
+                    <UpdateProduct />
+                </PrivateRoute>,
                 loader: async ({ params }) => {
                     const result = await store.dispatch(productApi.endpoints.getSingleProduct.initiate(params.id)) 
                     return result 

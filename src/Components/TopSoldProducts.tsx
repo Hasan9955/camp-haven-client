@@ -2,6 +2,7 @@ import ProductCard from "./ProductCard";
 import { TProduct } from "../interface/product.interface";
 import { useGetTopSoldProductsQuery } from "../redux/features/product/productApi";
 import Title from "./Title";
+import { Link } from "react-router-dom";
 
 
 const TopSoldProducts = () => {
@@ -10,12 +11,16 @@ const TopSoldProducts = () => {
 
 
     if (isLoading) {
-        return <p>Loading...</p>;
+        return <div className="flex justify-center items-center mt-32">
+            <span className="loading loading-spinner text-blue-500 size-16"></span>
+        </div>
     }
 
     if (isError) {
-        console.error(isError);
-        return <p>An error occurred!</p>;
+        return <div className="flex justify-center items-center flex-col space-y-4">
+            <p className="text-red-500 text-center text-xl md:text-3xl">An error is going on!!!</p>
+            <Link to={'/'}><button className="btn bg-blue-500 text-white">Go Home</button></Link>
+        </div>
     }
     return (
         <> 

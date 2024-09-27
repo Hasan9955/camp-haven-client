@@ -26,8 +26,7 @@ const AddProduct = () => {
         
 
         try {
-            const res = await addProduct(productInfo).unwrap()
-            console.log(res); 
+            const res = await addProduct(productInfo).unwrap() 
             if(res.success){
                 Swal.fire({
                     position: "center",

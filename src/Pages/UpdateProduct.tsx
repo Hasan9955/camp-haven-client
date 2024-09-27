@@ -1,4 +1,4 @@
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { Link, useLoaderData, useNavigate } from "react-router-dom";
 import { Response } from "./ProductDetails";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
@@ -13,11 +13,16 @@ const UpdateProduct = () => {
     const res = useLoaderData() as Response
     const { data, isError, isLoading } = res;
     if (isLoading) {
-        return <p>Loading...</p>
+        return <div className="flex justify-center items-center mt-32">
+            <span className="loading loading-spinner text-blue-500 size-16"></span>
+        </div>
     }
 
     if (isError) {
-        return <p>An error is going on!!!</p>
+        return <div className="flex justify-center items-center flex-col space-y-4">
+            <p className="text-red-500 text-center text-xl md:text-3xl">An error is going on!!!</p>
+            <Link to={'/'}><button className="btn bg-blue-500 text-white">Go Home</button></Link>
+        </div>
     }
     const { _id, name, description, photo, price, category, quantity, brand } = data.data;
 
@@ -44,8 +49,7 @@ const UpdateProduct = () => {
             data: productInfo
         }
         try {
-            const res = await updateProduct(product).unwrap()
-            console.log(res);
+            const res = await updateProduct(product).unwrap() 
             if (res.success) {
                 Swal.fire({
                     position: "center",

@@ -10,7 +10,7 @@ const Login = () => {
 
     const [error, setError] = useState('')
     const navigate = useNavigate()
-    const location = useLocation()
+    const location = useLocation() 
     const [login] = useLoginMutation();
     const dispatch = useAppDispatch();
     
@@ -23,13 +23,11 @@ const Login = () => {
         const userInfo = {
             email,
             password
-        }
-        console.log(userInfo);
+        } 
 
 
         try {
-            const res = await login(userInfo).unwrap();
-            console.log(res);
+            const res = await login(userInfo).unwrap(); 
 
             const user = {
                 userId: res.data._id,
@@ -42,10 +40,9 @@ const Login = () => {
             dispatch(setUser({
                 user
             }))
-            toast.success('Login Successful !!!')
+            toast.success('Login Successful !!!') 
             navigate(location.state ? location.state : '/')
-        } catch (error) {
-            console.log(error);
+        } catch (error) { 
             setError(error as string)
         } 
     }

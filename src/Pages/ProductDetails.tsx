@@ -1,4 +1,4 @@
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { Link, useLoaderData, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { TProduct } from "../interface/product.interface";
 import ReactImageMagnify from "react-image-magnify";
@@ -26,17 +26,26 @@ const ProductDetails = () => {
     const res = useLoaderData() as Response;
     const { data, isError, isLoading } = res;
     if (isLoading) {
-        return <p>Loading...</p>
+        return <div className="flex justify-center items-center mt-32">
+            <span className="loading loading-spinner text-blue-500 size-16"></span>
+        </div>
     }
 
     if (isError) {
-        console.log(isError);
-        return <p>An error is going on!!!</p>
+        return <div className="flex justify-center items-center flex-col space-y-4">
+            <p className="text-red-500 text-center text-xl md:text-3xl">An error is going on!!!</p>
+            <Link to={'/'}><button className="btn bg-blue-500 text-white">Go Home</button></Link>
+        </div>
     }
     const { _id, name, description, photo, price, quantity: stock, brand, sold } = data.data;
 
 
     const handleAddCart = async (id: string) => {
+        if (!user) {
+            return navigate('/login', {
+                state: `/productDetails/${id}`
+            })
+        }
         const productData = {
             productId: id,
             userId: user?.userId,
@@ -60,8 +69,8 @@ const ProductDetails = () => {
 
 
     const increaseCount = () => {
-        if(countQuantity < stock){
- setCountQuantity(countQuantity + 1)
+        if (countQuantity < stock) {
+            setCountQuantity(countQuantity + 1)
         }
     };
     const decreaseCount = () => {
@@ -113,7 +122,7 @@ const ProductDetails = () => {
                             <p className="font-bold ">Quantity:</p>
                             <div className="flex items-center space-x-2">
                                 <button
-                                disabled={countQuantity <= 1}
+                                    disabled={countQuantity <= 1}
                                     onClick={decreaseCount}
                                     className="px-4 py-2 bg-gray-200 text-gray-600 hover:bg-gray-300 rounded-l btn btn-sm rounded-none">
                                     -
@@ -129,9 +138,9 @@ const ProductDetails = () => {
                                             setCountQuantity(0);
                                         }
                                     }}
-                                    className="input-sm w-12 text-center py-2 bg-gray-100 border border-gray-300"/>
+                                    className="input-sm w-12 text-center py-2 bg-gray-100 border border-gray-300" />
                                 <button
-                                disabled={countQuantity >= stock}
+                                    disabled={countQuantity >= stock}
                                     onClick={increaseCount}
                                     className="px-4 py-2 bg-gray-200 text-gray-600 hover:bg-gray-300 rounded-r btn btn-sm rounded-none">
                                     +

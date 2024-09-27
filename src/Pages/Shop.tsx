@@ -3,7 +3,7 @@ import { useGetProductsQuery } from "../redux/features/product/productApi";
 import ProductCard from "../Components/ProductCard";
 import { TProduct } from "../interface/product.interface";
 import img from '../assets/no-magento-product-found.jpg';
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 type TQuery = {
     filter?: string;
@@ -32,15 +32,10 @@ const Shop = () => {
     // Fetch products based on the query
     const { data, isError, isLoading } = useGetProductsQuery(query, {
         refetchOnMountOrArgChange: true,
-    });
-    console.log(data);
+    }); 
 
     // Store fetched products
     const [products, setProducts] = useState<TProduct[]>([]);
-
-    window.onbeforeunload = function () {
-        return "Data will be lost if you leave the page, are you sure?";
-    };
 
     // Update products when data changes
     useEffect(() => {
@@ -108,12 +103,16 @@ const Shop = () => {
     };
 
     if (isLoading) {
-        return <p>Loading...</p>;
+        return <div className="flex justify-center items-center mt-32">
+            <span className="loading loading-spinner text-blue-500 size-16"></span>
+        </div>
     }
 
     if (isError) {
-        console.error(isError);
-        return <p>An error occurred!</p>;
+        return <div className="flex justify-center items-center flex-col space-y-4">
+            <p className="text-red-500 text-center text-xl md:text-3xl">An error is going on!!!</p>
+            <Link to={'/'}><button className="btn bg-blue-500 text-white">Go Home</button></Link>
+        </div>
     }
 
     return (

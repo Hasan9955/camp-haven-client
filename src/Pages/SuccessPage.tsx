@@ -8,8 +8,7 @@ const SuccessPage = () => {
 
      
     const {width, height} = useWindowSize();
-    const location = useLocation();
-    console.log(location);
+    const location = useLocation(); 
     const orderData = location.state 
 
     return (

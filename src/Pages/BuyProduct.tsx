@@ -74,6 +74,7 @@ const BuyProduct = () => {
             })
         } catch (error) {
             console.log(error);
+            toast.error("An error is going on!")
             
         }
     }
@@ -83,7 +84,7 @@ const BuyProduct = () => {
     return (
         <div>
             <h2 className="text-2xl my-2 ml-5">{productData.name}</h2>
-            <div className="flex">
+            <div className="flex flex-col-reverse md:flex-row">
                 <form onSubmit={handleOrder} className="md:w-1/2 p-5 border-2">
                     <div className="form-control">
                         <label className="label">
